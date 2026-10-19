@@ -1,13 +1,13 @@
-// Licensed under the Dartastic Pro Software License Agreement.
+// Licensed under the Apache License, Version 2.0
 // Copyright 2025-2026 Mindful Software LLC d/b/a Dartastic.io, All rights reserved.
 
-import 'package:dartastic_opentelemetry/dartastic_opentelemetry.dart';
+import 'package:dartastic_opentelemetry_api/dartastic_opentelemetry_api.dart';
 
 import 'otel_adobe_sign_suppression.dart';
 
 const _tracerName = 'dartastic_otel_libs_adobe_sign';
 
-Tracer _tracer() => OTel.tracerProvider().getTracer(_tracerName);
+APITracer _tracer() => OTelAPI.tracerProvider().getTracer(_tracerName);
 
 class AdobeSignResult {
   const AdobeSignResult({
@@ -91,26 +91,26 @@ Future<T> tracedAdobeSign<T>({
   final span = _tracer().startSpan(
     'adobe_sign $operation',
     kind: SpanKind.client,
-    attributes: OTel.attributesFromMap(m),
+    attributes: OTelAPI.attributesFromMap(m),
   );
   try {
     final r = await invoke();
     if (r.result != null) {
       final extras = <Attribute<Object>>[];
       if (r.result!.itemCount != null) {
-        extras.add(OTel.attributeInt(
+        extras.add(OTelAPI.attributeInt(
           'adobe_sign.item_count',
           r.result!.itemCount!,
         ));
       }
       if (r.result!.agreementId != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'adobe_sign.agreement.id',
           r.result!.agreementId!,
         ));
       }
       if (r.result!.state != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'adobe_sign.agreement.state',
           r.result!.state!,
         ));
@@ -124,43 +124,43 @@ Future<T> tracedAdobeSign<T>({
         }
       }
       if (r.result!.signatureType != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'adobe_sign.signature.type',
           r.result!.signatureType!,
         ));
       }
       if (r.result!.megaSign != null) {
-        extras.add(OTel.attributeBool(
+        extras.add(OTelAPI.attributeBool(
           'adobe_sign.mega_sign',
           r.result!.megaSign!,
         ));
       }
       if (r.result!.shard != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'adobe_sign.shard',
           r.result!.shard!,
         ));
       }
       if (r.result!.participantCount != null) {
-        extras.add(OTel.attributeInt(
+        extras.add(OTelAPI.attributeInt(
           'adobe_sign.participant_count',
           r.result!.participantCount!,
         ));
       }
       if (r.result!.workflowId != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'adobe_sign.workflow.id',
           r.result!.workflowId!,
         ));
       }
       if (r.result!.requestId != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'adobe_sign.request.id',
           r.result!.requestId!,
         ));
       }
       if (r.result!.statusCode != null) {
-        extras.add(OTel.attributeInt(
+        extras.add(OTelAPI.attributeInt(
           'http.response.status_code',
           r.result!.statusCode!,
         ));
@@ -171,13 +171,13 @@ Future<T> tracedAdobeSign<T>({
           );
         }
       }
-      if (extras.isNotEmpty) span.addAttributes(OTel.attributes(extras));
+      if (extras.isNotEmpty) span.addAttributes(OTelAPI.attributes(extras));
     }
     return r.value;
   } catch (e, st) {
-    span.addAttributes(OTel.attributes([
-      OTel.attributeString(
-        ErrorResource.errorType.key,
+    span.addAttributes(OTelAPI.attributes([
+      OTelAPI.attributeString(
+        ErrorAttributes.errorType.key,
         e.runtimeType.toString(),
       ),
     ]));
